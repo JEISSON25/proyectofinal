@@ -10,7 +10,7 @@ export default function LocationManager({ onLocationSuccess }) {
 
     if (status !== 'granted') {
       setLocationDenied(true);
-      Alert.alert("Permiso negado", "La app necesita acceso a tu ubicación.");
+      Alert.alert("Permiso denegado", "La app necesita acceso a tu ubicación.");
       return;
     }
 
@@ -18,4 +18,24 @@ export default function LocationManager({ onLocationSuccess }) {
     setLocationDenied(false);
     onLocationSuccess(location.coords);
   };
-  
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      {locationDenied && (
+        <>
+          <Text style={styles.text}>Ubicación denegada. Habilítala en ajustes.</Text>
+          <Button title="Reintentar ubicación" onPress={getLocation} />
+        </>
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { padding: 20 },
+  text: { marginBottom: 10, textAlign: 'center', color: '#333' }
+});
