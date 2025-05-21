@@ -1,0 +1,26 @@
+import React, { useState } from 'react';
+import { View, Button,} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+const Reservar = () => {
+const [fecha, setFecha] = useState(new Date());
+const [mostrar, setMostrar] = useState(false);
+
+return (
+
+<Button title="Seleccionar fecha" onPress={() => setMostrar(true)} />
+{mostrar && (
+<DateTimePicker
+value={fecha}
+mode="date"
+onChange={(e, f) => {
+setMostrar(false);
+if (f) setFecha(f);
+}}
+/>
+)}
+
+);
+};
+
+export default Reservar;
