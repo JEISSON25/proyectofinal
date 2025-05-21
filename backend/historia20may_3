@@ -1,0 +1,12 @@
+{
+    "indexes": [
+      {
+        "collectionGroup": "timeSlots",
+        "queryScope": "COLLECTION",
+        "fields": [
+          {"fieldPath": "roomId", "order": "ASCENDING"},
+          {"fieldPath": "date", "order": "ASCENDING"}
+        ]
+      }
+    ]
+  }
