@@ -25,3 +25,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+
+import React from 'react';
+import RetryLocationScreen from './RetryLocationScreen'; 
+
+export default function App() {
+  return <RetryLocationScreen />;
+}
