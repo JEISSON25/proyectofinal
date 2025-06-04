@@ -1,0 +1,50 @@
+import React, { useState } from 'react';
+import { SafeAreaView, View, Text, Button, TouchableOpacity } from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
+const App = () => {
+  const [selectedDate, setSelectedTime] = useState(new Date());
+  const [isPickerVisible, setPickerVisible] = useState(false);
+
+  const togglePicker =() => {
+    setPickerVisible(!isPickerVisible);
+  }
+  const handleConfirm =(time) => {
+    setSelectedTime(time);
+    togglePicker();
+  }
+
+  
+
+  return (
+    <SafeAreaView style={{ flex: 2 }}>
+      <View
+        style={{
+          padding: 22, flex: 2, display: 'flex', justifyContent: 'center', alignItems: 'center',
+        }}
+      >
+        <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>
+          {selectedDate ? selectedDate.toLocaleDateString() : 'NO has seleccionado'}
+        </Text>
+            <TouchableOpacity onPress={togglePicker}
+            style= {{
+                backgroundcolor: '#007FFF',
+                padding: 12,
+                borderRadius: 8,
+            }} 
+            >
+            <text>Seleccione la hora</text>
+            </TouchableOpacity>
+        <DateTimePickerModal
+          date={selectedDate}
+          isVisible={isPickerVisible}
+          mode="tiempo"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default App;
