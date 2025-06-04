@@ -1,0 +1,23 @@
+const CancelacionDeCita = () => {
+    const [estadoDeCancelacion, setEstadoDeCancelacion] = usaState('');
+    const[reservacionCancelada, setReservacionCancelada] = useState(false);
+
+    const procesoCancelacion = () => {
+        Alert.alert ("Estas seguro que quieres cancelar?",
+        "Los cambios no se pueden deshacer",
+        [
+            {text: "No"},
+            { text: "Si", onPress:() => cancelarCita()}
+        ]
+        
+        
+        
+        )
+
+    }
+    const cancelarCita = () =>{
+        setReservacionCancelada(ture);
+        setEstadoDeCancelacion('Tu reserva fue cancelada')
+    }
+
+}
