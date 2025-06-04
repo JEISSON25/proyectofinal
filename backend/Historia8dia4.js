@@ -8,7 +8,7 @@ async function getRoomsByCapacity(minCapacity) {
     const db = admin.firestore();
     const roomsRef = db.collection("rooms");
 
-    // Consulta optimizada en Firestore
+    // Se usara snapshot para obtener los documentos que cumplen con la condición
     const snapshot = await roomsRef.where("capacity", ">=", minCapacity).get();
 
     let rooms = [];
