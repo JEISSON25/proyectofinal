@@ -1,23 +1,40 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { db } from '../backend/Historia1backed';
+import { doc, updateDoc } from 'firebase/firestore';
 
 const IndicadorCancelacion = ({ 
     confirmacionCancelacion, 
+    reservaId,
     mensaje = 'Cancelando...', 
     onAnimacionCompleta
 }) => {
+    const [error, setError] = useState(null);
     
     useEffect(() => {
         if (confirmacionCancelacion) {
-            const timer = setTimeout(() => {
-                if (onAnimacionCompleta) {
-                    onAnimacionCompleta();
+            const cancelarReserva = async () => {
+                try {
+                    const reservaRef = doc(db, 'reservas', reservaId);
+                    await updateDoc(reservaRef, {
+                        estado: 'cancelada',
+                        fechaCancelacion: new Date().toISOString()
+                    });
+                    
+                    setTimeout(() => {
+                        if (onAnimacionCompleta) {
+                            onAnimacionCompleta();
+                        }
+                    }, 2000);
+                } catch (err) {
+                    setError('Error al cancelar la reserva');
+                    console.error('Error:', err);
                 }
-            }, 2000);
+            };
 
-            return () => clearTimeout(timer);
+            cancelarReserva();
         }
-    }, [confirmacionCancelacion, onAnimacionCompleta]);
+    }, [confirmacionCancelacion, onAnimacionCompleta, reservaId]);
 
     if (!confirmacionCancelacion) return null;
 
@@ -29,7 +46,9 @@ const IndicadorCancelacion = ({
                     color="#0000ff"
                     animating={true}
                 />
-                <Text style={estilos.texto}>{mensaje}</Text>
+                <Text style={estilos.texto}>
+                    {error || mensaje}
+                </Text>
             </View>
         </View>
     );
