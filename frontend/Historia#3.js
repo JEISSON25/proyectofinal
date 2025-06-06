@@ -1,8 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 
-const IndicadorCancelacion = ({ confirmacionCancelacion }) => {
+const IndicadorCancelacion = ({ 
+    confirmacionCancelacion, 
+    mensaje = 'Cancelando...', 
+    onAnimacionCompleta
+}) => {
     
+    useEffect(() => {
+        if (confirmacionCancelacion) {
+            const timer = setTimeout(() => {
+                if (onAnimacionCompleta) {
+                    onAnimacionCompleta();
+                }
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [confirmacionCancelacion, onAnimacionCompleta]);
+
     if (!confirmacionCancelacion) return null;
 
     return (
@@ -13,7 +29,7 @@ const IndicadorCancelacion = ({ confirmacionCancelacion }) => {
                     color="#0000ff"
                     animating={true}
                 />
-                <Text style={estilos.texto}>Cancelando...</Text>
+                <Text style={estilos.texto}>{mensaje}</Text>
             </View>
         </View>
     );
