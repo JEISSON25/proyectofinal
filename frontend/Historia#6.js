@@ -27,7 +27,6 @@ const Historia6 = (navegation) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         padding: 20,
@@ -41,5 +40,4 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
 });
-
 export default Historia6;
