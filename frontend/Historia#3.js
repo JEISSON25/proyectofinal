@@ -27,8 +27,8 @@ const IndicadorCancelacion = ({
                         }
                     }, 2000);
                 } catch (err) {
-                    setError('Error al cancelar la reserva');
-                    console.error('Error:', err);
+                    setError('Error: No se pudo cancelar la reserva'); // Mensaje más descriptivo
+                    console.error('Error en cancelación:', err);
                 }
             };
 
