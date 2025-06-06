@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { db } from '../backend/Historia1backed';
+import { db } from '../firebase/firebase-config';
 import { doc, updateDoc } from 'firebase/firestore';
 
 const IndicadorCancelacion = ({ 
