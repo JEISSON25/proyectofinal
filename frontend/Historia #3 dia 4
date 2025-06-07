@@ -1,0 +1,41 @@
+import React, { useState } from 'react';
+import { View, Text, Button, ActivityIndicator, StyleSheet} from 'react-native';
+
+const CancelarB = () => {
+  const [Cancelando, setCancelando] = useState(false);
+
+  const Cancelacion = () => {
+    setCancelando(true);
+  };
+
+  return (
+    <View style={styles.container}>
+      {Cancelando ? (
+        <View style={styles.indicatorContainer}>
+          <ActivityIndicator size="small" color="#00ff00" />
+          <Text style={styles.text}>Cancelando reserva…</Text>
+        </View>
+      ) : (
+        <Button title="Cancelar" onPress={Cancelacion} />
+      )}
+    </View>
+  );
+};
+
+export default CancelarB;
+
+const styles = StyleSheet.create({
+    container: {
+      marginTop: 100,
+      alignItems: 'center',
+    },
+    indicatorContainer: {
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    text: {
+      marginLeft: 10,
+      fontFamily: 'initial',
+      fontSize: 12,
+    },
+  });
