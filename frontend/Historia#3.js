@@ -1,72 +1,88 @@
 import React, { useEffect, useState } from 'react';
-import { View, PermissionsAndroid, Platform, Alert, StyleSheet } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import Geolocation from 'react-native-geolocation-service';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { db } from '../firebase/firebase-config';
+import { doc, updateDoc } from 'firebase/firestore';
 
-const MapaConUbicacion = () => {
-  const [location, setLocation] = useState(null);
+const IndicadorCancelacion = ({ 
+    confirmacionCancelacion, 
+    reservaId,
+    mensaje = 'Cancelando...', 
+    onAnimacionCompleta
+}) => {
+    const [error, setError] = useState(null);
+    
+    useEffect(() => {
+        if (confirmacionCancelacion) {
+            const cancelarReserva = async () => {
+                try {
+                    const reservaRef = doc(db, 'reservas', reservaId);
+                    await updateDoc(reservaRef, {
+                        estado: 'cancelada',
+                        fechaCancelacion: new Date().toISOString()
+                    });
+                    
+                    setTimeout(() => {
+                        if (onAnimacionCompleta) {
+                            onAnimacionCompleta();
+                        }
+                    }, 2000);
+                } catch (err) {
+                    setError('Error: No se pudo cancelar la reserva'); // Mensaje más descriptivo
+                    console.error('Error en cancelación:', err);
+                }
+            };
 
-  const requestLocationPermission = async () => {
-    if (Platform.OS === 'android') {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-      return granted === PermissionsAndroid.RESULTS.GRANTED;
-    }
-    return true; 
-  };
+            cancelarReserva();
+        }
+    }, [confirmacionCancelacion, onAnimacionCompleta, reservaId]);
 
-  const obtenerUbicacion = async () => {
-    const tienePermiso = await requestLocationPermission();
-    if (!tienePermiso) {
-      Alert.alert('Permiso denegado', 'No se puede obtener la ubicación sin permisos');
-      return;
-    }
+    if (!confirmacionCancelacion) return null;
 
-    Geolocation.getCurrentPosition(
-      (position) => {
-        setLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
-        });
-      },
-      (error) => {
-        console.error(error);
-        Alert.alert('Error', 'No se pudo obtener la ubicación');
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    return (
+        <View style={estilos.contenedor}>
+            <View style={estilos.cajaCarga}>
+                <ActivityIndicator 
+                    size="large" 
+                    color="#0000ff"
+                    animating={true}
+                />
+                <Text style={estilos.texto}>
+                    {error || mensaje}
+                </Text>
+            </View>
+        </View>
     );
-  };
-
-  useEffect(() => {
-    obtenerUbicacion();
-  }, []);
-
-  return (
-    <View style={styles.container}>
-      {location && (
-        <MapView
-          style={styles.map}
-          region={location}
-          showsUserLocation={true}
-          showsMyLocationButton={true}
-        >
-          <Marker coordinate={location} title="Mi ubicación actual" />
-        </MapView>
-      )}
-    </View>
-  );
 };
 
-export default MapaConUbicacion;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
+const estilos = StyleSheet.create({
+    contenedor: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000,
+    },
+    cajaCarga: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    texto: {
+        marginTop: 10,
+        fontSize: 16,
+        color: '#333',
+        fontWeight: '500',
+    },
 });
+
+export default IndicadorCancelacion;
