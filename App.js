@@ -2,6 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Historia10 from './frontend/Historia10';
 import MapView, { Marker } from 'react-native-maps';
+import React from 'react';
+
 
 
 export default function App() {
@@ -33,4 +35,9 @@ import RetryLocationScreen from './RetryLocationScreen';
 
 export default function App() {
   return <RetryLocationScreen />;
+}
+
+import ListaSalas from './frontend/ListaSalas';
+export default function App() {
+  return <ListaSalas />;
 }
